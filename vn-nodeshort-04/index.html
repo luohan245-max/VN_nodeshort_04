@@ -136,8 +136,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
       <div class="brand"><img src="./assets/nodeshort-logo-new.png" alt="NodeShort logo"></div>
       <div class="actions">
         <a id="btnCSTop" data-pos="top" data-tg="Nodeshort_VN" class="btn tg cta-join"
-           href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener"
-          >
+           href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener">
           <span class="icon icon-tg">
             <picture style="display:inline-block;width:18px;height:18px">
               <source media="(prefers-color-scheme: dark)" srcset="./assets/icon-tele-dark.svg">
@@ -320,30 +319,30 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
         const recent = []; const WINDOW_MS = 120000;
         function purgeOld(now){while(recent.length && now - recent[0].t > WINDOW_MS){ recent.shift(); }}
         function pickName(){ const now=Date.now(); purgeOld(now); const blocked=new Set(recent.map(r=>r.name)); for(let i=0;i<names.length*2;i++){ const c=names[Math.floor(Math.random()*names.length)]; if(!blocked.has(c)) return c;} recent.shift(); return names[Math.floor(Math.random()*names.length)];}
-        function showToast(){ const name=pickName(); const amount=amounts[Math.floor(Math.random()*amounts.length)]; const variant=variants[Math.floor(Math.random()*variants.length)]; const msg=variant(name, amount); recent.push({name, t: Date.now()}); el.innerText = msg; el.style.opacity='0'; el.style.display='block'; requestAnimationFrame(()=>{ el.style.transition='opacity .25s'; el.style.opacity='1'; }); setTimeout(()=>{ el.style.opacity='0'; setTimeout(()=>{ el.style.display='none'; },300); }, 2600); }
+        function showToast(){ const name=pickName(); const amount=amounts[Math.floor(Math.random()*amounts.length)]; const variant=variants[Math.floor(Math.random()*variants.length)]; const msg=variant(name, amount); recent.push({name, t: Date.now()}); el.innerText = msg; el.style.opacity = '0'; el.style.display = 'block'; requestAnimationFrame(()=>{ el.style.transition='opacity .25s'; el.style.opacity='1'; }); setTimeout(()=>{ el.style.opacity='0'; setTimeout(()=>{ el.style.display='none'; },300); }, 2600); }
         setTimeout(()=>{ showToast(); setInterval(showToast, 4200); }, 1200);
       })();
     </script>
 
     <script>
-  // Sticky CTA show/hide (clean, no syntax errors)
-  (function(){
-    const sticky = document.getElementById('stickyCTA');
-    if(!sticky) return;
-    const showSticky = ()=>{
-      if(window.scrollY > 320) sticky.classList.add('visible');
-      else sticky.classList.remove('visible');
-    };
-    window.addEventListener('scroll', showSticky, {passive:true});
-    setTimeout(()=>{
-      if(document.body.scrollHeight <= window.innerHeight * 1.2){
-        sticky.classList.add('visible');
-      } else {
-        showSticky();
-      }
-    }, 600);
-  })();
-</script>
+      // Sticky CTA show/hide (clean, no syntax errors)
+      (function(){
+        const sticky = document.getElementById('stickyCTA');
+        if(!sticky) return;
+        const showSticky = ()=>{
+          if(window.scrollY > 320) sticky.classList.add('visible');
+          else sticky.classList.remove('visible');
+        };
+        window.addEventListener('scroll', showSticky, {passive:true});
+        setTimeout(()=>{
+          if(document.body.scrollHeight <= window.innerHeight * 1.2){
+            sticky.classList.add('visible');
+          } else {
+            showSticky();
+          }
+        }, 600);
+      })();
+    </script>
 
     <!-- Adaptive Telegram deep-link with UTM passthrough (fixed) -->
     <script>
@@ -395,20 +394,13 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
               fbq('track','Contact', payload);
               fbq('trackCustom','CTA_Click', payload);
             }
+            const base='https://www.facebook.com/tr';
+            const p1=new URLSearchParams({id:'4246326045691268',ev:'Contact',dl:location.href,rl:document.referrer});
+            const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
             if (typeof fetch === 'function') {
-              const base='https://www.facebook.com/tr';
-              const p1=new URLSearchParams({id:'4246326045691268',ev:'Contact',dl:location.href,rl:document.referrer});
-              const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
               try { fetch(`${base}?${p1.toString()}`, {mode:'no-cors'}); } catch(e) {}
               try { fetch(`${base}?${p2.toString()}`, {mode:'no-cors'}); } catch(e) {}
             } else if (navigator.sendBeacon) {
-              const base='https://www.facebook.com/tr';
-              const p1=new URLSearchParams({id:'4246326045691268',ev:'Contact',dl:location.href,rl:document.referrer});
-              const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
-              navigator.sendBeacon(`${base}?${p1.toString()}`);
-              navigator.sendBeacon(`${base}?${p2.toString()}`);
-            });
-              const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
               navigator.sendBeacon(`${base}?${p1.toString()}`);
               navigator.sendBeacon(`${base}?${p2.toString()}`);
             }
@@ -424,9 +416,25 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
             setTimeout(()=> openTelegram(user), 1200);
           });
         });
+
+        // —— 内置测试用例（不会影响线上）：?ns_test=1 ——
+        try{
+          const test = new URLSearchParams(location.search).get('ns_test');
+          if(test==='1'){
+            // stub fbq/fetch 防止真实上报
+            window.fbq = function(){ console.log('[TEST] fbq', arguments); };
+            const _fetch = window.fetch;
+            window.fetch = function(url, opts){ console.log('[TEST] fetch', url); return Promise.resolve(); };
+            console.log('[TEST] start');
+            fireFbEvents('auto-test');
+            console.log('[TEST_PASS] fireFbEvents executed without syntax errors');
+            window.fetch = _fetch;
+          }
+        }catch(e){ console.log('[TEST_FAIL]', e); }
       })();
     </script>
-  <script>try{ if(typeof fbq==='function'){ fbq('track','PageView'); } }catch(e){} </script>
-</main>
+
+    <script>try{ if(typeof fbq==='function'){ fbq('track','PageView'); } }catch(e){} </script>
+  </main>
 </body>
 </html>
