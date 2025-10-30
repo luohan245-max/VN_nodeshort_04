@@ -326,21 +326,24 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
     </script>
 
     <script>
-      function trackCTA(){ /* deprecated: events are tracked in fireFbEvents() */ }
-        }catch(_e){}
+  // Sticky CTA show/hide (clean, no syntax errors)
+  (function(){
+    const sticky = document.getElementById('stickyCTA');
+    if(!sticky) return;
+    const showSticky = ()=>{
+      if(window.scrollY > 320) sticky.classList.add('visible');
+      else sticky.classList.remove('visible');
+    };
+    window.addEventListener('scroll', showSticky, {passive:true});
+    setTimeout(()=>{
+      if(document.body.scrollHeight <= window.innerHeight * 1.2){
+        sticky.classList.add('visible');
+      } else {
+        showSticky();
       }
-
-      const sticky = document.getElementById('stickyCTA');
-      const showSticky = ()=>{ if(window.scrollY > 320) sticky.classList.add('visible'); else sticky.classList.remove('visible'); };
-      window.addEventListener('scroll', showSticky, {passive:true});
-      setTimeout(()=>{
-        if(document.body.scrollHeight <= window.innerHeight * 1.2){
-          sticky.classList.add('visible');
-        } else {
-          showSticky();
-        }
-      }, 600);
-    </script>
+    }, 600);
+  })();
+</script>
 
     <!-- Adaptive Telegram deep-link with UTM passthrough (fixed) -->
     <script>
