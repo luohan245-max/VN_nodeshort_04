@@ -93,7 +93,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
     .carousel .slides{display:flex;transition:transform .5s ease}
     .carousel .slides img{flex:0 0 100%;width:100%;height:100%;object-fit:cover}
     .carousel .dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:8px}
-    .carousel .dot{width:8px;height:8px;border-radius:50%;background:color-mix(in oklch, var(--muted) 60%, transparent)}
+    .carousel .dot{width:8px;height:8px;border-radius:50%;background:#a6a8ad66}
     .carousel .dot.active{background:var(--brand)}
     @media (min-width:0){#uiCarousel{aspect-ratio:9/16;max-height:80vh;}#uiCarousel .slides{height:100%}}
 
@@ -137,7 +137,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
       <div class="actions">
         <a id="btnCSTop" data-pos="top" data-tg="Nodeshort_VN" class="btn tg cta-join"
            href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener"
-           onclick="trackCTA('tele','top')">
+          >
           <span class="icon icon-tg">
             <picture style="display:inline-block;width:18px;height:18px">
               <source media="(prefers-color-scheme: dark)" srcset="./assets/icon-tele-dark.svg">
@@ -194,7 +194,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
         </div>
 
         <div class="cta-row" style="margin-top:18px;display:grid;grid-template-columns:1fr;gap:12px">
-          <a id="btnCSFlowMain" data-pos="flow" data-tg="Nodeshort_VN" class="btn tg cta-join" href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener" onclick="trackCTA('tele','flow')">
+          <a id="btnCSFlowMain" data-pos="flow" data-tg="Nodeshort_VN" class="btn tg cta-join" href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener">
             <span class="icon icon-tg">
               <picture style="display:inline-block;width:18px;height:18px">
                 <source media="(prefers-color-scheme: dark)" srcset="./assets/icon-tele-dark.svg">
@@ -259,7 +259,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
 
     <div class="sticky-cta" id="stickyCTA">
       <div class="container" style="padding:12px;display:grid;grid-template-columns:1fr;gap:12px">
-        <a id="btnCSSticky" data-pos="sticky" data-tg="Nodeshort_VN" class="btn tg cta-join" href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener" onclick="trackCTA('tele','sticky')">
+        <a id="btnCSSticky" data-pos="sticky" data-tg="Nodeshort_VN" class="btn tg cta-join" href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener">
           <span class="icon icon-tg">
             <picture style="display:inline-block;width:18px;height:18px">
               <source media="(prefers-color-scheme: dark)" srcset="./assets/icon-tele-dark.svg">
@@ -274,7 +274,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
 
     <footer style="margin:40px auto 120px;text-align:center;color:#777">
       <div class="container" style="max-width:1120px;margin:0 auto 18px;display:grid;grid-template-columns:1fr;gap:12px">
-        <a id="btnCSFooter" data-pos="footer" data-tg="Nodeshort_VN" class="btn tg cta-join" href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener" onclick="trackCTA('tele','footer')">
+        <a id="btnCSFooter" data-pos="footer" data-tg="Nodeshort_VN" class="btn tg cta-join" href="https://t.me/Nodeshort_VN" target="_blank" rel="noopener">
           <span class="icon icon-tg">
             <picture style="display:inline-block;width:18px;height:18px">
               <source media="(prefers-color-scheme: dark)" srcset="./assets/icon-tele-dark.svg">
@@ -326,24 +326,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
     </script>
 
     <script>
-      function trackCTA(channel, position){
-        try{
-          const usp = new URLSearchParams(location.search);
-          const payload = {
-            content_name: channel,
-            content_category: 'CTA',
-            position,
-            path: location.pathname + location.search,
-            utm_source: usp.get('utm_source'),
-            utm_medium: usp.get('utm_medium'),
-            utm_campaign: usp.get('utm_campaign'),
-            utm_content: usp.get('utm_content'),
-            utm_term: usp.get('utm_term')
-          };
-          if(typeof fbq==='function'){
-            fbq('track','Contact', payload);
-            fbq('trackCustom','CTA_Click', payload);
-          }
+      function trackCTA(){ /* deprecated: events are tracked in fireFbEvents() */ }
         }catch(_e){}
       }
 
@@ -359,7 +342,7 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
       }, 600);
     </script>
 
-    <!-- Adaptive Telegram deep-link with UTM passthrough (where applicable) -->
+    <!-- Adaptive Telegram deep-link with UTM passthrough (fixed) -->
     <script>
       (function(){
         const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
@@ -367,36 +350,65 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
         const utm = {};
         UTM_KEYS.forEach(k=>{ const v=usp.get(k); if(v) utm[k]=v; });
 
-        function isIOS(){ return /iP(hone|od|ad)/i.test(navigator.userAgent); }
-        function isAndroid(){ return /Android/i.test(navigator.userAgent); }
         function openTelegram(username){
-          const scheme = `tg://resolve?domain=${username}`; // deep-link app
-          // web fallback; Telegram web không nhận query tuỳ ý, giữ UTM qua hash để tham khảo
           const web = `https://t.me/${username}` + (Object.keys(utm).length? `#${new URLSearchParams(utm).toString()}` : '');
+          const scheme = `tg://resolve?domain=${username}`;
 
-          let opened = false;
-          // Ưu tiên mở app trên di động
-          if(isIOS() || isAndroid()){
-            const t = Date.now();
-            setTimeout(()=>{ if(!opened){ window.location.href = web; } }, 700);
+          const isiOS = /iP(hone|od|ad)/i.test(navigator.userAgent);
+          const isAndroid = /Android/i.test(navigator.userAgent);
+
+          let fallback = setTimeout(()=>{ window.location.href = web; }, 800);
+          const onHide = ()=>{ clearTimeout(fallback); document.removeEventListener('visibilitychange', onHide); };
+          document.addEventListener('visibilitychange', onHide);
+
+          if(isiOS){
+            window.location.href = scheme;
+          } else if(isAndroid){
             const iframe = document.createElement('iframe');
             iframe.style.display='none';
             iframe.src = scheme;
             document.body.appendChild(iframe);
-            setTimeout(()=>{ document.body.removeChild(iframe); }, 1200);
-            setTimeout(()=>{ opened = (Date.now()-t) < 1500; }, 300);
+            setTimeout(()=>{ try{ document.body.removeChild(iframe); }catch(e){} }, 1200);
           } else {
-            // desktop: mở web Telegram
+            clearTimeout(fallback);
             window.location.href = web;
           }
         }
 
-        // Bind tất cả CTA
+        function fireFbEvents(pos){
+          try{
+            const payload = {
+              content_name: 'tele',
+              content_category: 'CTA',
+              position: pos || 'unknown',
+              path: location.pathname + location.search,
+              utm_source: usp.get('utm_source'),
+              utm_medium: usp.get('utm_medium'),
+              utm_campaign: usp.get('utm_campaign'),
+              utm_content: usp.get('utm_content'),
+              utm_term: usp.get('utm_term')
+            };
+            if(typeof fbq==='function'){
+              fbq('track','Contact', payload);
+              fbq('trackCustom','CTA_Click', payload);
+            }
+            if(navigator.sendBeacon){
+              const base='https://www.facebook.com/tr';
+              const p1=new URLSearchParams({id:'4246326045691268',ev:'Contact',dl:location.href,rl:document.referrer});
+              const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
+              navigator.sendBeacon(`${base}?${p1.toString()}`);
+              navigator.sendBeacon(`${base}?${p2.toString()}`);
+            }
+          }catch(e){}
+        }
+
         document.querySelectorAll('.cta-join[data-tg]').forEach(a=>{
           a.addEventListener('click', function(ev){
-            ev.preventDefault(); // giữ href làm fallback khi tắt JS
+            ev.preventDefault();
             const user = this.getAttribute('data-tg') || 'Nodeshort_VN';
-            openTelegram(user);
+            const pos = this.dataset.pos || 'unknown';
+            fireFbEvents(pos);
+            setTimeout(()=> openTelegram(user), 350);
           });
         });
       })();
