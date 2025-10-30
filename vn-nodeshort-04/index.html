@@ -395,9 +395,19 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
               fbq('track','Contact', payload);
               fbq('trackCustom','CTA_Click', payload);
             }
-            if(navigator.sendBeacon){
+            if (typeof fetch === 'function') {
               const base='https://www.facebook.com/tr';
               const p1=new URLSearchParams({id:'4246326045691268',ev:'Contact',dl:location.href,rl:document.referrer});
+              const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
+              try { fetch(`${base}?${p1.toString()}`, {mode:'no-cors'}); } catch(e) {}
+              try { fetch(`${base}?${p2.toString()}`, {mode:'no-cors'}); } catch(e) {}
+            } else if (navigator.sendBeacon) {
+              const base='https://www.facebook.com/tr';
+              const p1=new URLSearchParams({id:'4246326045691268',ev:'Contact',dl:location.href,rl:document.referrer});
+              const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
+              navigator.sendBeacon(`${base}?${p1.toString()}`);
+              navigator.sendBeacon(`${base}?${p2.toString()}`);
+            });
               const p2=new URLSearchParams({id:'4246326045691268',ev:'CTA_Click',dl:location.href,rl:document.referrer});
               navigator.sendBeacon(`${base}?${p1.toString()}`);
               navigator.sendBeacon(`${base}?${p2.toString()}`);
@@ -411,11 +421,12 @@ src="https://www.facebook.com/tr?id=4246326045691268&ev=PageView&noscript=1"
             const user = this.getAttribute('data-tg') || 'Nodeshort_VN';
             const pos = this.dataset.pos || 'unknown';
             fireFbEvents(pos);
-            setTimeout(()=> openTelegram(user), 350);
+            setTimeout(()=> openTelegram(user), 1200);
           });
         });
       })();
     </script>
-  </main>
+  <script>try{ if(typeof fbq==='function'){ fbq('track','PageView'); } }catch(e){} </script>
+</main>
 </body>
 </html>
